@@ -1,0 +1,21 @@
+<h1>Profiles</h1>
+
+<form class="searchProfiles" action="profiles">
+  <input type="text" placeholder="Search.." name="searchProfiles">
+  <button type="submit">Search<i class="searchProfilesBtn"></i></button>
+</form>
+<br>
+
+<div>
+<ul>
+  <% for (let i = 0; i < profiles.length; i++ ) {%>
+  <li>
+    <a href="/user/profile/<%= profiles[i].username %>"><%= profiles[i].firstName %></a> | 
+
+    <% if(reqInfo.username == profileInfo.user.username || reqInfo.roles?.length) { %>
+      <a href="/user/profile/<%= profiles[i].username %>/delete"><button>Delete</button></a>
+    <% } %>
+  </li>
+  <% } %>
+</ul>
+</div>

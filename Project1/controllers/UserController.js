@@ -1,0 +1,305 @@
+const User = require("../models/User");
+const passport = require("passport");
+const RequestService = require("../services/RequestService");
+
+const UserOps = require("../data/UserOps");
+const _userOps = new UserOps();
+
+const path = require("path");
+const { where } = require("../models/User");
+const dataPath = path.join(__dirname, "../public/");
+
+
+
+
+exports.Register = async function (req, res) {
+  let reqInfo = RequestService.reqHelper(req);
+  res.render("user/register", { errorMessage: "", user: {}, reqInfo: reqInfo });
+};
+
+
+exports.RegisterUser = async function (req, res) {
+  const password = req.body.password;
+  const passwordConfirm = req.body.passwordConfirm;
+  if (password == passwordConfirm) {
+
+    const newUser = new User({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      username: req.body.username,
+    });
+
+
+    User.register(
+      new User(newUser),
+      req.body.password,
+      function (err, account) {
+        // Show registration form with errors if fail.
+        if (err) {
+          let reqInfo = RequestService.reqHelper(req);
+          return res.render("user/register", {
+            user: newUser,
+            errorMessage: err,
+            reqInfo: reqInfo,
+          });
+        }
+
+        
+        passport.authenticate("local")(req, res, function () {
+          res.redirect("/secure/secure-area");
+        });
+      }
+    );
+  } else {
+    let reqInfo = RequestService.reqHelper(req);
+    res.render("user/register", {
+      user: {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        username: req.body.username,
+      },
+      errorMessage: "Passwords do not match.",
+      reqInfo: reqInfo,
+    });
+  }  
+};
+
+
+// Shows login form.
+exports.Login = async function (req, res) {
+  let reqInfo = RequestService.reqHelper(req);
+  let errorMessage = req.query.errorMessage;
+
+  res.render("user/login", {
+    user: {},
+    errorMessage: errorMessage,
+    reqInfo: reqInfo,
+  });
+};
+
+exports.LoginUser = async (req, res, next) => {
+  passport.authenticate("local", {
+    successRedirect: "/user/profile",
+    failureRedirect: "/user/login?errorMessage=Invalid login.",
+  })(req, res, next);
+};
+
+  // Log user out and direct them to the login screen.
+exports.Logout = (req, res) => {
+    req.logout((err) => {
+      if (err) {
+        console.log("logout error");
+        return next(err);
+      } else {
+
+        let reqInfo = RequestService.reqHelper(req);
+        res.render("user/login", {
+          user: {},
+          isLoggedIn: false,
+          errorMessage: "",
+          reqInfo: reqInfo,
+        });
+      }
+    })
+};
+
+
+exports.Index = async function(request, response) {
+    let profiles = []
+    let reqInfo = RequestService.reqHelper(request)
+    let profileInfo = null;
+    let userInfo = await _userOps.getUserByUsername(reqInfo.username);
+    
+    // GETTING USERNAME FOR AUTH SO WE CAN EITHER SHOW OR NOT SHOW DELETE
+    if(request.params.username){
+      profileInfo = await _userOps.getUserByUsername(request.params.username)
+    }
+    else{
+      profileInfo = userInfo
+    };
+
+    // SEARCH
+    if(request.query.searchProfiles){
+      profiles = await _userOps.searchProfiles(request.query.searchProfiles).user;
+    }
+    else{
+      profiles = await _userOps.getAllProfiles();
+    };
+    
+      if (profiles) {
+        response.render("user/profiles", {
+          profiles: profiles,
+          profileInfo: profileInfo,
+          reqInfo: reqInfo
+        });
+      } else {
+        response.render("user/profiles", {
+          profiles: [],
+          profileInfo: profileInfo,
+          reqInfo: reqInfo
+        });
+      };
+};
+
+
+
+
+exports.Profile = async function (req, res) {
+    let reqInfo = RequestService.reqHelper(req);
+
+    if (reqInfo.authenticated) {
+      let roles = await _userOps.getRolesByUsername(reqInfo.username);
+      let sessionData = req.session;
+      sessionData.roles = roles;
+      reqInfo.roles = roles;
+      let userInfo = await _userOps.getUserByUsername(reqInfo.username);
+      let profileInfo = null;
+      if(req.params.username){
+        profileInfo = await _userOps.getUserByUsername(req.params.username)
+      }
+      else{
+        profileInfo = userInfo
+      }
+
+
+      profiles = await _userOps.getAllProfiles();
+
+      return res.render("user/profile", {
+        reqInfo: reqInfo,
+        userInfo: userInfo,
+        profileInfo: profileInfo,
+        profiles: profiles,
+        layout: "./layouts/side-bar-layout"
+      });
+    } else {
+      res.redirect(
+        "/user/login?errorMessage=You must be logged in to view this page."
+      );
+    }
+  };
+
+
+exports.DeleteProfileById = async function (request, response) {
+  const profileId = request.params.id;
+  let reqInfo = RequestService.reqHelper(request, ["Admin", "Manager"]);
+
+  
+  if(reqInfo.rolePermitted){
+    let deletedProfile = await _userOps.deleteProfile(profileId);
+    let profiles = await _userOps.getAllProfiles();
+    if (deletedProfile) {
+      response.render("user/profiles", {
+        profiles: profiles,
+        reqInfo: reqInfo
+      });
+    } else {
+      response.render("user/profiles", {
+        profiles: profiles,
+        reqInfo: reqInfo,
+        errorMessage: "Error.  Unable to Delete",
+      });
+    }
+  };
+};
+
+
+
+//GET EDIT
+exports.Edit = async function (request, response) {
+  const username = request.params.username;
+  const profileId = request.params.id;
+  console.log(request.params)
+  let reqInfo = RequestService.reqHelper(request, ["Admin", "Manager"]);
+
+  let { user } = await _userOps.getUserByUsername(username);
+
+  if(reqInfo.rolePermitted){
+    response.render("user/profile-form", {
+      errorMessage: "",
+      profile_id: profileId,
+      reqInfo: reqInfo,
+      user: user
+    })
+  } else{
+      response.redirect(
+        "/user/login?errorMessage=You must be logged in to view this page."
+      );
+    }
+  };
+
+
+// POST EDIT
+exports.EditProfile = async function (request, response) {
+  let reqInfo = RequestService.reqHelper(request);
+
+  const userFirstName = request.body.firstName;
+  const userLastName = request.body.lastName;
+  const userEmail = request.body.email;
+  const userRoles = request.body.roles;
+  let path = "";
+  let profileInterests = request.body.interests.split(",");
+  let username = request.body.username;
+
+  if(request.files != null)
+  {
+    path = dataPath+"/images/"+request.files.photo.name
+    request.files.photo.mv(path) 
+    path = "/images/"+request.files.photo.name
+  }
+  else{
+    path = null;
+  }
+
+  let responseObj = await _userOps.updateUserByUserName(username, userFirstName, userLastName, userEmail, profileInterests, userRoles, path);
+
+  profiles = await _userOps.getAllProfiles();
+
+  if (responseObj.errorMsg == "") {
+    response.render("user/profile", {
+      reqInfo: reqInfo,
+      profileInfo: responseObj,
+      profiles: profiles,
+      layout: "./layouts/side-bar-layout"
+    });
+  }
+
+  else {
+    console.log("An error occured. Item not created.");
+    response.render("profile-form", {
+      profile: responseObj.obj,
+      profiles: profiles,
+      errorMessage: responseObj.errorMsg,
+      layout: "./layouts/side-bar-layout"
+    });
+  }
+};
+
+
+// Admin and/or Manager role
+exports.ManagerArea = async function (req, res) {
+  let reqInfo = RequestService.reqHelper(req, ["Admin", "Manager"]);
+
+  if (reqInfo.rolePermitted) {
+    res.render("user/manager-area", { errorMessage: "", reqInfo: reqInfo });
+  } else {
+    res.redirect(
+      "/user/login?errorMessage=You must be a manager or admin to access this area."
+    );
+  }
+};
+
+
+// Admin role only
+exports.AdminArea = async function (req, res) {
+  let reqInfo = RequestService.reqHelper(req, ["Admin"]);
+
+  if (reqInfo.rolePermitted) {
+    res.render("user/admin-area", { errorMessage: "", reqInfo: reqInfo });
+  } else {
+    res.redirect(
+      "/user/login?errorMessage=You must be an admin to access this area."
+    );
+  }
+};

@@ -1,0 +1,13 @@
+<h1>My Profile</h1>
+  
+  Username: <%= profileInfo.user.username %><br/>
+  Name: <%= profileInfo.user.firstName %> <%= profileInfo.user.lastName %><br/>
+  Email: <%= profileInfo.user.email %><br/>
+  Interests: <%= profileInfo.user.interests %><br/>
+  
+  <% if(reqInfo.roles?.length) { %>
+  Roles: <%= reqInfo.roles %>
+  <% if(reqInfo.username == profileInfo.user.username || reqInfo.roles?.length) { %>
+  <a href="/user/edit/<%= reqInfo.username %>"><button>Edit</button></a>
+  <% } %>
+  <% } %>
