@@ -1,5 +1,9 @@
 <h1>My Profile</h1>
-  
+  <% if(profileInfo.imagePath) { %>
+    <img src="<%= profileInfo.imagePath %>" alt="<%= profileInfo.username %>" height = 300px />
+  <% } %>
+  <br/>
+
   Username: <%= profileInfo.user.username %><br/>
   Name: <%= profileInfo.user.firstName %> <%= profileInfo.user.lastName %><br/>
   Email: <%= profileInfo.user.email %><br/>
