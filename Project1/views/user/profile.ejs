@@ -1,6 +1,7 @@
 <h1>My Profile</h1>
-  <% if(profileInfo.imagePath) { %>
-    <img src="<%= profileInfo.imagePath %>" alt="<%= profileInfo.username %>" height = 300px />
+
+  <% if(profileInfo.user.imagePath) { %>
+    <img src="<%= profileInfo.user.imagePath %>" alt="<%= profileInfo.username %>" height = 300px />
   <% } %>
   <br/>
 
@@ -9,9 +10,9 @@
   Email: <%= profileInfo.user.email %><br/>
   Interests: <%= profileInfo.user.interests %><br/>
   
-  <% if(reqInfo.roles?.length) { %>
-  Roles: <%= reqInfo.roles %>
-  <% if(reqInfo.username == profileInfo.user.username || reqInfo.roles?.length) { %>
-  <a href="/user/edit/<%= reqInfo.username %>"><button>Edit</button></a>
+  <% if(profileInfo.user.roles?.length) { %>
+  Roles: <%= profileInfo.user.roles %>
   <% } %>
-  <% } %>
+
+  <% if(reqInfo.username == profileInfo.user.username || reqInfo.roles?.includes("Admin") || reqInfo.roles?.includes("Manager")) { %>
+    <a href="/user/edit/<%= profileInfo.user.username %>"><button>Edit</button></a> <% } %>
