@@ -107,7 +107,6 @@ exports.Logout = (req, res) => {
 
 
 exports.Index = async function(request, response) {
-    let profiles = []
     let reqInfo = RequestService.reqHelper(request)
     let profileInfo = null;
     let userInfo = await _userOps.getUserByUsername(reqInfo.username);
@@ -122,7 +121,7 @@ exports.Index = async function(request, response) {
 
     // SEARCH
     if(request.query.searchProfiles){
-      profiles = await _userOps.searchProfiles(request.query.searchProfiles).user;
+      profiles = await _userOps.searchProfiles(request.query.searchProfiles);
     }
     else{
       profiles = await _userOps.getAllProfiles();
@@ -142,6 +141,7 @@ exports.Index = async function(request, response) {
         });
       };
 };
+
 
 
 
@@ -175,7 +175,7 @@ exports.Profile = async function (req, res) {
       });
     } else {
       res.redirect(
-        "/user/login?errorMessage=You must be logged in to view this page."
+        "/user/login?errorMessage=You must be a Admin or Manager to view this page"
       );
     }
   };
@@ -183,7 +183,7 @@ exports.Profile = async function (req, res) {
 
 exports.DeleteProfileById = async function (request, response) {
   const profileId = request.params.id;
-  let reqInfo = RequestService.reqHelper(request, ["Admin", "Manager"]);
+  let reqInfo = RequestService.reqHelper(request, ["Admin"]);
 
   
   if(reqInfo.rolePermitted){
@@ -198,7 +198,7 @@ exports.DeleteProfileById = async function (request, response) {
       response.render("user/profiles", {
         profiles: profiles,
         reqInfo: reqInfo,
-        errorMessage: "Error.  Unable to Delete",
+        errorMessage: "Error. Unable to Delete",
       });
     }
   };
