@@ -28,6 +28,8 @@ exports.RegisterUser = async function (req, res) {
       lastName: req.body.lastName,
       email: req.body.email,
       username: req.body.username,
+      interests: req.body.interests.split(","),
+      imagePath: req.body.photo
     });
 
 
@@ -182,9 +184,13 @@ exports.Profile = async function (req, res) {
 
 
 exports.DeleteProfileById = async function (request, response) {
-  const profileId = request.params.id;
-  let reqInfo = RequestService.reqHelper(request, ["Admin"]);
+  const username = request.params.username;
+  const userResult = await _userOps.getUserByUsername(username)
+  const profileId = userResult.user._id;
 
+  let reqInfo = RequestService.reqHelper(request, ["Admin"]);
+  
+  console.log(reqInfo);
   
   if(reqInfo.rolePermitted){
     let deletedProfile = await _userOps.deleteProfile(profileId);
@@ -195,11 +201,8 @@ exports.DeleteProfileById = async function (request, response) {
         reqInfo: reqInfo
       });
     } else {
-      response.render("user/profiles", {
-        profiles: profiles,
-        reqInfo: reqInfo,
-        errorMessage: "Error. Unable to Delete",
-      });
+      response.redirect(
+        "/user/login?errorMessage=You must be a Admin or Manager to view this page")
     }
   };
 };

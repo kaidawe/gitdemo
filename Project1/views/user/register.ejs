@@ -1,4 +1,4 @@
-<form action="/user/register" method="POST">   
+<form action="/user/register" method="POST" enctype="multipart/form-data" >   
     <table>
         <tr>
             <td>User Name: </td>
@@ -19,7 +19,17 @@
             <td>Last Name: </td>
             <td><input name="lastName" type="text"
                        value="<%= user.lastName ? user.lastName : '' %>"></td>
-        </tr>                        
+        </tr>    
+        <tr>
+            <td>Interests (comma seperated please): td>
+            <td><input name="interests" type="text"
+                       value="<%= user.interests ? user.interests : '' %>"></td>
+        </tr>  
+
+        <tr>
+        <input id="photo" name="photo" type="file">
+        </tr>
+
         <tr>
             <td>Password:</td>
             <td><input name="password" type="password"></td>

@@ -55,6 +55,7 @@ class UserOps {
 
   async deleteProfile(id) {
     console.log(`deleting user`);
+    
     let result = await User.findByIdAndDelete(id);
     console.log(result);
     return result;
