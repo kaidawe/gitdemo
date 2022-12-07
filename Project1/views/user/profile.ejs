@@ -16,3 +16,15 @@
 
   <% if(reqInfo.username == profileInfo.user.username || reqInfo.roles?.includes("Admin") || reqInfo.roles?.includes("Manager")) { %>
     <a href="/user/edit/<%= profileInfo.user.username %>"><button>Edit</button></a> <% } %>
+
+    <div class="profile-comment">
+      <label for="comments">Leave a Comment</label>
+      <br/>
+      <label for="commentAuthor">Comment Author:</label>
+      <input id="commentAuthor" name="commentAuthor" type="text" 
+                  value="<%= profileInfo.user.username ? " ": '' %>" >
+                      <label for="commentBody">Comment:</label>
+      <input id="commentBody" name="commentBody" type="text" 
+                  value="<%= profileInfo.user.commentBody ? user.commentBody : '' %>" >
+                  <a href="/user/profile/<%= profileInfo.user.username %>"><button>Submit</button></a>
+                </div>

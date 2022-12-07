@@ -21,7 +21,19 @@ exports.Register = async function (req, res) {
 exports.RegisterUser = async function (req, res) {
   const password = req.body.password;
   const passwordConfirm = req.body.passwordConfirm;
+
   if (password == passwordConfirm) {
+
+    let path = "";
+    if(req.files != null)
+    {
+      path = dataPath+"/images/"+req.files.photo.name
+      req.files.photo.mv(path) 
+      path = "/images/"+req.files.photo.name
+    }
+    else{
+      path = null;
+    }
 
     const newUser = new User({
       firstName: req.body.firstName,
@@ -29,7 +41,7 @@ exports.RegisterUser = async function (req, res) {
       email: req.body.email,
       username: req.body.username,
       interests: req.body.interests.split(","),
-      imagePath: req.body.photo
+      imagePath: path
     });
 
 
@@ -37,7 +49,6 @@ exports.RegisterUser = async function (req, res) {
       new User(newUser),
       req.body.password,
       function (err, account) {
-        // Show registration form with errors if fail.
         if (err) {
           let reqInfo = RequestService.reqHelper(req);
           return res.render("user/register", {
@@ -218,7 +229,7 @@ exports.Edit = async function (request, response) {
 
   let { user } = await _userOps.getUserByUsername(username);
 
-  if(reqInfo.rolePermitted){
+  if(reqInfo.rolePermitted || reqInfo.username == username){
     response.render("user/profile-form", {
       errorMessage: "",
       profile_id: profileId,
@@ -292,6 +303,9 @@ exports.ManagerArea = async function (req, res) {
     );
   }
 };
+
+
+
 
 
 // Admin role only

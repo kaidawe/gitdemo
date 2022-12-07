@@ -18,7 +18,7 @@ userRouter.get("/edit/:username", UserController.Edit);
 userRouter.post("/edit/:username", UserController.EditProfile);
 
 userRouter.get("/:username/delete", UserController.DeleteProfileById);
-// userRouter.post("/comment/:id", UserController.Comment);
+// userRouter.post("/comment/:username", UserController.Comment);
 
 userRouter.get("/logout", UserController.Logout);
 
