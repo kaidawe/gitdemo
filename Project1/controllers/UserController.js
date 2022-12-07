@@ -188,7 +188,7 @@ exports.Profile = async function (req, res) {
       });
     } else {
       res.redirect(
-        "/user/login?errorMessage=You must be a Admin or Manager to view this page"
+        "/user/login?errorMessage=You cannot view this page"
       );
     }
   };
@@ -213,7 +213,7 @@ exports.DeleteProfileById = async function (request, response) {
       });
     } else {
       response.redirect(
-        "/user/login?errorMessage=You must be a Admin or Manager to view this page")
+        "/user/login?errorMessage=You cannot view this page")
     }
   };
 };
@@ -238,7 +238,7 @@ exports.Edit = async function (request, response) {
     })
   } else{
       response.redirect(
-        "/user/login?errorMessage=You must be logged in to view this page."
+        "/user/login?errorMessage=You cannot view this page"
       );
     }
   };
@@ -291,32 +291,34 @@ exports.EditProfile = async function (request, response) {
 };
 
 
-// Admin and/or Manager role
-exports.ManagerArea = async function (req, res) {
-  let reqInfo = RequestService.reqHelper(req, ["Admin", "Manager"]);
+exports.Comments = async function(req, res){
+  let reqInfo = RequestService.reqHelper(req);
 
-  if (reqInfo.rolePermitted) {
-    res.render("user/manager-area", { errorMessage: "", reqInfo: reqInfo });
-  } else {
-    res.redirect(
-      "/user/login?errorMessage=You must be a manager or admin to access this area."
-    );
+  const comment = {
+    commentBody: req.body.comment,
+    commentAuthor: reqInfo.username,
+  };
+
+  let profileInfo = await _userOps.addCommentToUser(
+    comment,
+    req.params.username
+  );
+
+  if (profileInfo.errorMessage == "") {
+    res.render("user/profile", {
+      reqInfo: reqInfo,
+      profileInfo: profileInfo,
+      profiles: profiles,
+      layout: "./layouts/side-bar-layout"
+    });
   }
-};
-
-
-
-
-
-// Admin role only
-exports.AdminArea = async function (req, res) {
-  let reqInfo = RequestService.reqHelper(req, ["Admin"]);
-
-  if (reqInfo.rolePermitted) {
-    res.render("user/admin-area", { errorMessage: "", reqInfo: reqInfo });
-  } else {
-    res.redirect(
-      "/user/login?errorMessage=You must be an admin to access this area."
-    );
+  else {
+    console.log("An error occured. Item not created.");
+    res.render("user/profile", {
+      reqInfo: reqInfo,
+      profileInfo: profileInfo,
+      profiles: profiles,
+      layout: "./layouts/side-bar-layout"
+    });
   }
-};
+}

@@ -1,5 +1,4 @@
 <h1>My Profile</h1>
-
   <% if(profileInfo.user.imagePath) { %>
     <img src="<%= profileInfo.user.imagePath %>" alt="<%= profileInfo.username %>" height = 300px />
   <% } %>
@@ -8,23 +7,34 @@
   Username: <%= profileInfo.user.username %><br/>
   Name: <%= profileInfo.user.firstName %> <%= profileInfo.user.lastName %><br/>
   Email: <%= profileInfo.user.email %><br/>
-  Interests: <%= profileInfo.user.interests %><br/>
-  
+  Interests: <%= profileInfo.user.interests %><br/><br/>
+
+  <h4>Comments</h4>
+    <% if(profileInfo.user.comments) { %>
+      <ul>
+        <% for (let j = 0; j < profileInfo.user.comments.length; j++) { %>
+          <li><%= profileInfo.user.comments[j].commentBody %> --- <%= profileInfo.user.comments[j].commentAuthor %> </li>
+        <% } %>
+      </ul>
+    <% } %>
+</br>
+
+
+
   <% if(profileInfo.user.roles?.length) { %>
   Roles: <%= profileInfo.user.roles %>
   <% } %>
 
   <% if(reqInfo.username == profileInfo.user.username || reqInfo.roles?.includes("Admin") || reqInfo.roles?.includes("Manager")) { %>
     <a href="/user/edit/<%= profileInfo.user.username %>"><button>Edit</button></a> <% } %>
+    <br/>
 
-    <div class="profile-comment">
-      <label for="comments">Leave a Comment</label>
-      <br/>
-      <label for="commentAuthor">Comment Author:</label>
-      <input id="commentAuthor" name="commentAuthor" type="text" 
-                  value="<%= profileInfo.user.username ? " ": '' %>" >
-                      <label for="commentBody">Comment:</label>
-      <input id="commentBody" name="commentBody" type="text" 
-                  value="<%= profileInfo.user.commentBody ? user.commentBody : '' %>" >
-                  <a href="/user/profile/<%= profileInfo.user.username %>"><button>Submit</button></a>
-                </div>
+
+  <%if(profileInfo.user.username != reqInfo.username) {%>
+      <form action="/user/comment/<%= profileInfo.user.username %>" method="POST" > 
+        <input type="hidden" id="username" name="username" value="<%= profileInfo.user.username %>">
+        <label for="name"></label>
+        <input id="comment" name="comment" placeholder= "Please leave your comment" type="text" >
+        <button type="submit" value="Submit">Submit</button>
+      </form>
+  <% } %>

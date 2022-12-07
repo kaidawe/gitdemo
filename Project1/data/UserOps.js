@@ -18,7 +18,7 @@ class UserOps {
   async getUserByUsername(username) {
     let user = await User.findOne(
       { username: username },
-      { _id: 1, username: 1, email: 1, firstName: 1, lastName: 1, interests: 1, roles: 1, imagePath: 1}
+      { _id: 1, username: 1, email: 1, firstName: 1, lastName: 1, interests: 1, roles: 1, imagePath: 1, comments: 1}
     );
 
     if (user) {
@@ -55,7 +55,7 @@ class UserOps {
 
   async deleteProfile(id) {
     console.log(`deleting user`);
-    
+
     let result = await User.findByIdAndDelete(id);
     console.log(result);
     return result;
@@ -84,7 +84,26 @@ class UserOps {
       errorMsg: "",
     };
   }
+
+  async addCommentToUser(comment, username) {
+    let user = await User.findOne({ username: username });
+
+    user.comments.push(comment);
+    
+    try {
+      let result = await user.save();
+      console.log("updated user: ", result);
+      const response = { user: result, errorMessage: "" };
+      return response;
+    } catch (error) {
+      console.log("error saving user: ", result);
+      const response = { user: user, errorMessage: error };
+      return response;
+    }
+  }
+
 };
+
 
 
 module.exports = UserOps;

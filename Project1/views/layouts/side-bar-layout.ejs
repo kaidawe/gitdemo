@@ -1,22 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+<link rel='stylesheet' href='/styles/sideBarStyles.css' />
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yearbook Project</title>
-    <style>
-      main {
-        display: flex;
-        justify-content: space-between;
-      }
-      .body {
-        flex: 1;
-      }
-      .sidebar {
-        flex: 1;
-      }
-    </style>
 </head>
 <body>
   <main role="main" class="container">
@@ -24,22 +13,21 @@
         
 
           <%if (reqInfo.authenticated) { %>
-              <a href="/">Home</a> | <a href="/user/profile">My Profile</a> | <a href="/user/">All Profiles</a> |
+              <h3><a href="/">Home</a></h3> | <h3><a href="/user/profile">My Profile</a></h3> | <h3><a href="/user/">All Profiles</a></h3> |
             <a href='/user/logout'>Logout</a> [<%= reqInfo.username %>] -->
 
           <% } else { %>
          
-            <a href='/user/login'>Login</a> |
-             <a href='/user/register'>Register</a> 
+            <h3><a href='/user/login'>Login</a></h3> |
+            <h3><a href='/user/register'>Register</a></h3> 
           <% } %>
 
             <!-- Child view goes here. -->
             <%- body %>
         </div>
-        <div class="sidebar">
-          <h2>Other Profiles</h2>
+        <div class="sidebarMenu">
+          <h2>Profiles</h2>
           <!-- <main><%- body %></main> -->
-
           <ul>
             <% for (let i = 0; i < profiles.length; i++ ) {%>
             <li>
@@ -47,7 +35,7 @@
             </li>
             <% } %>
           </ul>
-          
+
       </div>
     </main>
     <%- include('../partials/footer.ejs') %>

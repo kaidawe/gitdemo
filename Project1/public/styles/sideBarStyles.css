@@ -1,0 +1,23 @@
+
+main {
+    display: flex;
+    justify-content: space-between;
+}
+
+.body {
+    flex: 1;
+}
+
+.sidebar {
+    flex: 1;
+}
+
+.sidebarMenu{
+    display:flex;
+    justify-content: right;
+    flex-direction: column;
+}
+
+h3{
+    font-size: 15px;
+}
