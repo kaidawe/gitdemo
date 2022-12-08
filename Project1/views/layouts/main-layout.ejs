@@ -1,6 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+    <link rel='stylesheet' href='/styles/styles.css' />
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,7 +15,7 @@
 
             <%if (reqInfo.authenticated) { %>
                 <a href="/">Home</a> | <a href="/user/profile">My Profile</a> | <a href="/user/">All Profiles</a> |
-              <a href='/user/logout'>Logout</a> [<%= reqInfo.username %>] -->
+              <a href='/user/logout'>Logout</a> [<%= reqInfo.username %>]
 
             <% } else { %>
            
@@ -22,8 +23,10 @@
                <a href='/user/register'>Register</a> 
             <% } %>
     
-
-            <%- body %>
+            <div class="main-body">
+                <%- body %>
+            </div>
+            
         </div>
     </main>
     <%- include('../partials/footer.ejs') %>

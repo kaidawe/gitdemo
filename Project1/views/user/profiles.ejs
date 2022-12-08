@@ -9,10 +9,10 @@
 <ul>
   <% for (let i = 0; i < profiles.length; i++ ) {%>
   <li>
-    <a href="/user/profile/<%= profiles[i].username %>"><%= profiles[i].firstName %></a> | 
+    <a href="/user/profile/<%= profiles[i].username %>"><%= profiles[i].firstName %></a>
 
     <% if(reqInfo.roles?.includes("Admin")) { %>
-      <a href="/user/<%= profiles[i].username %>/delete"><button>Delete</button></a>
+      | <a href="/user/<%= profiles[i].username %>/delete"><button>Delete</button></a>
     <% } %>
   </li>
   <% } %>

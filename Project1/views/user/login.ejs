@@ -1,4 +1,6 @@
 <form action="/user/login" method="POST">   
+    <link rel='stylesheet' href='/styles/styles.css' />
+    <div class="table-wrapper">
     <table>
         <tr>
             <td>User Name: </td>
@@ -14,5 +16,6 @@
             <td> <input type="submit" value="Submit"></td>
         </tr>
     </table>
+</div>
 </form>
 <%= errorMessage ? errorMessage : "" %><br/>

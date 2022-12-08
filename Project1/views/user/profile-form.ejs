@@ -23,11 +23,11 @@
     <input type="checkbox" name="roles" value="Admin" <%= user.roles.includes("Admin") && "checked"%>>Admin
     <input type="checkbox" name="roles" value="Manager" <%= user.roles.includes("Manager") && "checked"%>>Manager
     </div>
-    <% } %> <br/><br/>
+    <% } %> 
 
     <label for="interests">Interests(input with comma please):</label>
     <input id="interests" name="interests" type="text" 
-                value="<%= user.interests ? user.interests : '' %>" > <br/><br/>
+                value="<%= user.interests ? user.interests : '' %>" >
 
     <input id="photo" name="photo" type="file">
   

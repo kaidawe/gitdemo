@@ -1,11 +1,21 @@
-
+@import url('https://fonts.googleapis.com/css2?family=Enriqueta&family=Noto+Sans+Display:wght@300;400;600;800&family=Orbitron&family=Raleway:wght@400;600;700&family=Righteous&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&family=Stick&display=swap');
+.container {
+    padding: 0;
+    margin: 0;
+    font-family: 'Noto Sans Display', sans-serif;
+}
 main {
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
+    flex-direction: row;
+    justify-content: space-around;
 }
 
 .body {
     flex: 1;
+    padding: 0;
+    margin: 0;
+    background: url('../images/background.jpg');
 }
 
 .sidebar {
@@ -19,5 +29,15 @@ main {
 }
 
 h3{
+    padding: 0;
+    margin: 0;
     font-size: 15px;
+}
+
+.nav-bar{
+    display: flex;
+    padding: 0;
+    margin: 0;
+    /* flex-direction: row; */
+    /* text-align: center; */
 }

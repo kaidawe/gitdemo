@@ -7,10 +7,11 @@
   Username: <%= profileInfo.user.username %><br/>
   Name: <%= profileInfo.user.firstName %> <%= profileInfo.user.lastName %><br/>
   Email: <%= profileInfo.user.email %><br/>
-  Interests: <%= profileInfo.user.interests %><br/><br/>
-
-  <h4>Comments</h4>
-    <% if(profileInfo.user.comments) { %>
+  Interests: <% for (let j = 0; j  < profileInfo.user.interests.length; j++) { %> 
+    <li><%= profileInfo.user.interests[j] %></li><% } %>
+  <% let profileComments = profileInfo.user.comments %>
+    <% if(profileInfo.user.comments && profileComments.length > 0) { %>
+      <h4>Comments</h4>
       <ul>
         <% for (let j = 0; j < profileInfo.user.comments.length; j++) { %>
           <li><%= profileInfo.user.comments[j].commentBody %> --- <%= profileInfo.user.comments[j].commentAuthor %> </li>

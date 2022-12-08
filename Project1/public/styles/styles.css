@@ -1,19 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Enriqueta&family=Noto+Sans+Display:wght@300;400;600;800&family=Orbitron&family=Raleway:wght@400;600;700&family=Righteous&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&family=Stick&display=swap');
 
-main{
-    background-color: wheat;
-    display: flex;
-    flex-direction: column;
+
+.container {
+    padding: 0;
+    margin: 0;
+    font-family: 'Noto Sans Display', sans-serif;
+    padding-top: 40px;
+    /* display: flex;
+    flex-direction: row; */
 }
-
+main{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+body{
+    padding: 0;
+    margin: 0;
+    background: url('../images/background.jpg');
+}
+.main-body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 100px;
+}
 form{
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    margin-left: 5px;
-    max-width: 100px;
+    /* margin-left: 5px; */
+    /* max-width: 100px; */
+    /* justify-content: center; */
 }
 
 .user-roles{
     display: flex;
     flex-direction: row;
+}
+
+footer{
+    padding: 0;
+    margin: 0;
+    font-family: 'Noto Sans Display', sans-serif;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 0;
+}
+
+table{
+    background-color: rgba(214, 214, 224, 0.808);
 }

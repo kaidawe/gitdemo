@@ -11,15 +11,17 @@
   <main role="main" class="container">
       <div class="starter-template">
         
-
           <%if (reqInfo.authenticated) { %>
+            <div class="nav-bar">
               <h3><a href="/">Home</a></h3> | <h3><a href="/user/profile">My Profile</a></h3> | <h3><a href="/user/">All Profiles</a></h3> |
-            <a href='/user/logout'>Logout</a> [<%= reqInfo.username %>] -->
+            <a href='/user/logout'>Logout</a> [<%= reqInfo.username %>]
+          </div>
 
           <% } else { %>
-         
+            <div class="nav-bar">
             <h3><a href='/user/login'>Login</a></h3> |
             <h3><a href='/user/register'>Register</a></h3> 
+          </div>
           <% } %>
 
             <!-- Child view goes here. -->
