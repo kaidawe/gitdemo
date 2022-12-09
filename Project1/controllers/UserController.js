@@ -256,6 +256,9 @@ exports.EditProfile = async function (request, response) {
   let profileInterests = request.body.interests.split(",");
   let username = request.body.username;
 
+  const deleteProfilePic = request.body.deleteProfilePic;
+
+
   if(request.files != null)
   {
     path = dataPath+"/images/"+request.files.photo.name
@@ -266,7 +269,7 @@ exports.EditProfile = async function (request, response) {
     path = null;
   }
 
-  let responseObj = await _userOps.updateUserByUserName(username, userFirstName, userLastName, userEmail, profileInterests, userRoles, path);
+  let responseObj = await _userOps.updateUserByUserName(username, userFirstName, userLastName, userEmail, profileInterests, userRoles, path, deleteProfilePic);
 
   profiles = await _userOps.getAllProfiles();
 

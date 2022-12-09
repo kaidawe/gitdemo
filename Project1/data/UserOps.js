@@ -61,7 +61,7 @@ class UserOps {
     return result;
   };
 
-  async updateUserByUserName(userName, userFirstName, lastName, email, interests, roles, imagePath) {
+  async updateUserByUserName(userName, userFirstName, lastName, email, interests, roles, imagePath, deleteProfilePic) {
     console.log(`updating user`)
 
     const person = await this.getUserByUsername(userName)
@@ -70,10 +70,17 @@ class UserOps {
 
     person.user.firstName = userFirstName;
     person.user.interests = interests;
-    person.user.imagePath = imagePath;
     person.user.lastName = lastName;
     person.user.email = email;
     person.user.roles = roles;
+    
+    if(deleteProfilePic){
+      person.user.imagePath = null;
+    }
+    if(imagePath){
+      person.user.imagePath = imagePath;
+    }
+
   
 
     let result = await person.user.save();

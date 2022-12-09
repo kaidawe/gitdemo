@@ -2,6 +2,11 @@
 <link rel='stylesheet' href='/styles/styles.css' />
 <form action="/user/edit/<%= user.username %>" method="POST" enctype="multipart/form-data" > 
 
+        <% if(user.imagePath) { %>
+        <img src="<%= user.imagePath %>" alt="<%= user.username %>" height = 300px />
+        <% } %>
+        <br/>
+
     <input type="hidden" id="username" name="username" value="<%= reqInfo.username %>">
     <input type="hidden" id="profile_id" name="profile_id" value="<%= profile_id %>">
 
@@ -29,9 +34,14 @@
     <input id="interests" name="interests" type="text" 
                 value="<%= user.interests ? user.interests : '' %>" >
 
-    <input id="photo" name="photo" type="file">
-  
+    <input id="photo" name="photo" type="file" >
+    <br/>
+    <label for="deleteProfilePic">Delete current profile pic: </label>
+    <input type="checkbox" name="deleteProfilePic" id="deleteProfilePic" value="1">
+    <br/>
+
     <button type="submit" value="Submit">Submit</button>
+
 </form>
 
 <%= errorMessage %>
